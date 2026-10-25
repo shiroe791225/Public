@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TOEIC 600 單字</title>
+  <meta name="description" content="多益 600 分核心 1,200 單字：間隔重複單字卡、測驗、發音與進度追蹤">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/">TOEIC <b>600</b></a>
+    <nav class="nav" id="nav">
+      <a href="#/" data-route="">總覽</a>
+      <a href="#/study" data-route="study">背單字</a>
+      <a href="#/quiz" data-route="quiz">測驗</a>
+      <a href="#/list" data-route="list">字庫</a>
+      <a href="#/settings" data-route="settings">設定</a>
+    </nav>
+  </header>
+
+  <main id="app" class="container" tabindex="-1"></main>
+
+  <footer class="footer container">
+    進度只存在此瀏覽器；換裝置請到「設定」匯出 / 匯入備份。
+  </footer>
+
+  <!-- 單字資料（依主題分檔） -->
+  <script src="data/topics.js"></script>
+  <script src="data/w01-office.js"></script>
+  <script src="data/w02-personnel.js"></script>
+  <script src="data/w03-meetings.js"></script>
+  <script src="data/w04-marketing.js"></script>
+  <script src="data/w05-finance.js"></script>
+  <script src="data/w06-purchasing.js"></script>
+  <script src="data/w07-logistics.js"></script>
+  <script src="data/w08-travel.js"></script>
+  <script src="data/w09-dining.js"></script>
+  <script src="data/w10-shopping.js"></script>
+  <script src="data/w11-legal.js"></script>
+  <script src="data/w12-general.js"></script>
+
+  <script src="js/storage.js"></script>
+  <script src="js/srs.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
