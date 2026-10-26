@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="N4 到 N3 的 12 週通勤課程：每天 40 分鐘拆成 4 個區塊，含 576 單字、100 文法、160 漢字、18 篇讀解與間隔複習">
+<meta name="theme-color" content="#2f5d8a">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;font-size:14px}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>通勤 N3 道場</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 版面：單欄「車窗」式 App——上方細資訊列、中段捲動、底部大按鈕導覽，單手可操作 */
+:root{
+  --paper:#f4f6f3; --card:#ffffff; --card-2:#eef1ee;
+  --ink:#1b2430; --ink-2:#56606d; --ink-3:#8b96a3;
+  --line:#dde2de; --line-2:#c9d0cb;
+  --ai:#2f5d8a; --ai-soft:#e6eef6; --ai-line:#b9cee4;
+  --shu:#bf3a2b; --shu-soft:#fbe9e6;
+  --take:#2d7a5c; --take-soft:#e4f1ea;
+  --amber:#9c6f14; --amber-soft:#f8efd8;
+  --f-disp:"Shippori Mincho","Yu Mincho","Songti TC",serif;
+  --f-ui:"Zen Kaku Gothic New","PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  --r:12px; --tap:48px;
+  --gut-l:max(16px,env(safe-area-inset-left,0px));
+  --gut-r:max(16px,env(safe-area-inset-right,0px));
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#101419; --card:#19202a; --card-2:#141b23;
+  --ink:#e7ebf0; --ink-2:#a4afbb; --ink-3:#717d8b;
+  --line:#2a333f; --line-2:#3a4552;
+  --ai:#8ab4e0; --ai-soft:#1a2836; --ai-line:#32506e;
+  --shu:#ef8679; --shu-soft:#33201e;
+  --take:#6cc09a; --take-soft:#16291f;
+  --amber:#d9ab52; --amber-soft:#2c2415;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#101419; --card:#19202a; --card-2:#141b23;
+  --ink:#e7ebf0; --ink-2:#a4afbb; --ink-3:#717d8b;
+  --line:#2a333f; --line-2:#3a4552;
+  --ai:#8ab4e0; --ai-soft:#1a2836; --ai-line:#32506e;
+  --shu:#ef8679; --shu-soft:#33201e;
+  --take:#6cc09a; --take-soft:#16291f;
+  --amber:#d9ab52; --amber-soft:#2c2415;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-ui);
+  font-size:15px;line-height:1.7;display:flex;flex-direction:column;overflow:hidden;
+  -webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
+p{margin:0}
+.ja{font-family:var(--f-disp);font-feature-settings:"palt" 1}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* ── 上方資訊列 ───────────────────────── */
+.top{flex:0 0 auto;background:var(--card);border-bottom:1px solid var(--line)}
+.top-in{padding-left:var(--gut-l);padding-right:var(--gut-r);padding-block:8px;
+  display:flex;align-items:center;gap:12px;min-height:46px}
+.top-day{font-family:var(--f-disp);font-size:17px;font-weight:700;letter-spacing:.02em}
+.top-sub{font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+.top-sp{flex:1;min-width:0}
+.pill{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--line-2);
+  color:var(--ink-2);white-space:nowrap}
+.pill.on{border-color:var(--ai-line);background:var(--ai-soft);color:var(--ai)}
+.pill.warn{border-color:var(--amber);background:var(--amber-soft);color:var(--amber)}
+.streak{font-size:12px;color:var(--ink-2);white-space:nowrap}
+.streak b{font-size:15px;color:var(--ink)}
+
+/* ── 主捲動區 ─────────────────────────── */
+main{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.wrap{padding-left:var(--gut-l);padding-right:var(--gut-r);padding-block:14px 24px;
+  display:flex;flex-direction:column;gap:14px;max-width:720px;margin:0 auto}
+.view[hidden]{display:none!important}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.card.flat{background:transparent;border:0;padding:0}
+.sect-h{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.sect-h h2{font-size:14px;letter-spacing:.08em}
+.sect-h .note{font-size:11px;color:var(--ink-3)}
+.eyebrow{font-size:10px;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase}
+
+/* 進度列 */
+.bar{height:6px;border-radius:3px;background:var(--card-2);overflow:hidden;border:1px solid var(--line)}
+.bar>i{display:block;height:100%;background:var(--ai);border-radius:3px;transition:width .3s}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.kpi{background:var(--card);padding:10px 8px;text-align:center;min-width:0}
+.kpi b{display:block;font-size:20px;line-height:1.2;font-variant-numeric:tabular-nums}
+.kpi span{font-size:10.5px;color:var(--ink-3);letter-spacing:.04em}
+
+/* 區塊清單 */
+.blocks{display:flex;flex-direction:column;gap:8px}
+.blk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:11px 12px;min-height:var(--tap)}
+.blk:disabled{opacity:.55;cursor:default}
+.blk .no{flex:0 0 26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-size:12px;font-weight:700;background:var(--card-2);color:var(--ink-2);border:1px solid var(--line)}
+.blk.done .no{background:var(--take-soft);color:var(--take);border-color:var(--take)}
+.blk.cur{border-color:var(--ai);box-shadow:0 0 0 2px var(--ai-soft)}
+.blk .bt{flex:1;min-width:0}
+.blk .bt i{display:block;font-style:normal;font-size:14.5px;font-weight:500}
+.blk .bt small{color:var(--ink-3);font-size:11.5px}
+.blk .mins{font-size:11px;color:var(--ink-3);white-space:nowrap}
+.mark{font-family:var(--f-disp);font-size:18px;line-height:1}
+.mark.o{color:var(--take)}.mark.x{color:var(--shu)}
+
+/* 按鈕 */
+.btn{display:block;width:100%;min-height:var(--tap);border-radius:var(--r);border:1px solid var(--ai);
+  background:var(--ai);color:#fff;font-size:16px;font-weight:700;letter-spacing:.04em;padding:10px}
+.btn.ghost{background:var(--card);color:var(--ai)}
+.btn.quiet{background:var(--card);color:var(--ink-2);border-color:var(--line-2);font-weight:500;font-size:14px}
+.btn:disabled{opacity:.5}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chip{min-height:38px;padding:6px 12px;border-radius:999px;border:1px solid var(--line-2);
+  background:var(--card);color:var(--ink-2);font-size:13px}
+.chip.on{border-color:var(--ai);background:var(--ai-soft);color:var(--ai);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.spk{flex:0 0 auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);
+  background:var(--card);color:var(--ai);display:grid;place-items:center;font-size:15px}
+
+/* ── 學習卡 ──────────────────────────── */
+.studyhead{display:flex;align-items:center;gap:10px}
+.studyhead .t{flex:1;min-width:0;font-size:13px;color:var(--ink-2)}
+.timer{font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;letter-spacing:.04em}
+.timer.low{color:var(--shu)}
+.dots{display:flex;gap:4px;flex-wrap:wrap}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line-2);display:block}
+.dots i.on{background:var(--ai)}
+.dots i.ok{background:var(--take)}
+.dots i.ng{background:var(--shu)}
+
+.ctr{text-align:center}
+.word{font-family:var(--f-disp);font-size:clamp(34px,11vw,52px);line-height:1.25;font-weight:700;
+  letter-spacing:.02em;word-break:break-word}
+.kanjibig{font-family:var(--f-disp);font-size:clamp(64px,22vw,96px);line-height:1;font-weight:700}
+.read{font-size:16px;color:var(--ai);letter-spacing:.06em;margin-top:4px}
+.mean{font-size:17px;margin-top:8px}
+.pos{display:inline-block;font-size:11px;padding:2px 7px;border-radius:4px;
+  background:var(--card-2);color:var(--ink-2);border:1px solid var(--line)}
+.rule{height:1px;background:var(--line);margin:12px 0}
+.ex{border-left:3px solid var(--ai-line);padding-left:10px;display:flex;flex-direction:column;gap:3px}
+.ex .j{font-family:var(--f-disp);font-size:16.5px;line-height:1.85}
+.ex .z{font-size:13px;color:var(--ink-2)}
+.exrow{display:flex;gap:8px;align-items:flex-start}
+.exrow>.ex{flex:1;min-width:0}
+.ptn{font-family:var(--f-disp);font-size:clamp(22px,7vw,30px);font-weight:700;line-height:1.4}
+.meta{display:flex;flex-direction:column;gap:7px;font-size:13.5px}
+.meta div{display:flex;gap:8px}
+.meta dt{flex:0 0 46px;color:var(--ink-3);font-size:11.5px;padding-top:3px;letter-spacing:.06em}
+.meta dd{margin:0;flex:1;min-width:0}
+.hint{background:var(--amber-soft);border:1px solid var(--amber);border-radius:8px;
+  padding:9px 11px;font-size:13px;color:var(--ink)}
+.hint b{color:var(--amber)}
+.kwords{display:flex;flex-wrap:wrap;gap:6px}
+.kw{border:1px solid var(--line);border-radius:8px;padding:6px 9px;background:var(--card-2);min-width:0}
+.kw b{font-family:var(--f-disp);font-size:16px;font-weight:700;display:block}
+.kw small{display:block;font-size:11px;color:var(--ai)}
+.kw span{font-size:11.5px;color:var(--ink-2)}
+
+/* 測驗 */
+.q{font-size:16px;line-height:1.75}
+.q .big{font-family:var(--f-disp);font-size:clamp(26px,8vw,36px);font-weight:700;display:block;margin:4px 0}
+.q .sent{font-family:var(--f-disp);font-size:17px;line-height:1.95}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;min-height:var(--tap);
+  background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);padding:9px 11px;font-size:15.5px}
+.opt .n{flex:0 0 22px;height:22px;border-radius:4px;display:grid;place-items:center;font-size:11px;
+  background:var(--card-2);border:1px solid var(--line);color:var(--ink-3)}
+.opt .tx{flex:1;min-width:0;font-family:var(--f-disp);font-size:16.5px}
+.opt.ok{border-color:var(--take);background:var(--take-soft)}
+.opt.ng{border-color:var(--shu);background:var(--shu-soft)}
+.opt.ok .n{background:var(--take);border-color:var(--take);color:#fff}
+.opt.ng .n{background:var(--shu);border-color:var(--shu);color:#fff}
+.opt:disabled{cursor:default}
+.fb{border-radius:var(--r);padding:11px 12px;font-size:13.5px;display:flex;gap:10px;align-items:flex-start}
+.fb.ok{background:var(--take-soft);border:1px solid var(--take)}
+.fb.ng{background:var(--shu-soft);border:1px solid var(--shu)}
+.fb .tx{flex:1;min-width:0}
+.fb .tx b{display:block;font-size:13px;margin-bottom:2px}
+
+/* 読解・聴解 */
+.passage{font-family:var(--f-disp);font-size:16.5px;line-height:2.05;white-space:pre-wrap;
+  word-break:break-word}
+.passage.tab{font-size:14.5px;line-height:1.95;background:var(--card-2);border:1px solid var(--line);
+  border-radius:8px;padding:11px;overflow-x:auto}
+.script{display:flex;flex-direction:column;gap:7px}
+.line{display:flex;gap:8px}
+.line .sp{flex:0 0 28px;font-size:11px;color:var(--ink-3);padding-top:4px}
+.line .tt{flex:1;min-width:0;font-family:var(--f-disp);font-size:16px;line-height:1.85}
+.audio{display:flex;align-items:center;gap:10px;background:var(--ai-soft);border:1px solid var(--ai-line);
+  border-radius:var(--r);padding:11px}
+.audio .lbl{flex:1;min-width:0;font-size:13px;color:var(--ai)}
+.playbig{flex:0 0 auto;width:52px;height:52px;border-radius:50%;border:0;background:var(--ai);color:#fff;
+  font-size:20px;display:grid;place-items:center}
+.cover{background:var(--card-2);border:1px dashed var(--line-2);border-radius:8px;padding:14px;
+  text-align:center;font-size:13px;color:var(--ink-3)}
+
+/* 課程表・字庫 */
+.wk{border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden}
+.wk>summary{padding:11px 12px;min-height:var(--tap);display:flex;align-items:center;gap:10px;
+  cursor:pointer;font-size:14px;list-style:none}
+.wk>summary::-webkit-details-marker{display:none}
+.wk>summary .wn{font-family:var(--f-disp);font-weight:700}
+.wk>summary .sp{flex:1}
+.wk .days{border-top:1px solid var(--line)}
+.dayrow{display:flex;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:13px}
+.dayrow:last-child{border-bottom:0}
+.dayrow .dn{flex:0 0 52px;color:var(--ink-3);font-size:11.5px;padding-top:2px}
+.dayrow .dc{flex:1;min-width:0}
+.dayrow .dc b{font-weight:500}
+.dayrow .dc small{display:block;color:var(--ink-3);font-size:11.5px}
+.dayrow.is-now{background:var(--ai-soft)}
+.dayrow.is-done .dn{color:var(--take)}
+input[type="search"],input[type="date"],select{width:100%;min-height:var(--tap);padding:9px 11px;
+  border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);color:var(--ink);
+  font:inherit;font-size:15px}
+textarea{width:100%;padding:9px 11px;border:1px solid var(--line-2);border-radius:var(--r);
+  background:var(--card);color:var(--ink);font:inherit;font-size:12px;line-height:1.5;
+  resize:vertical;margin-top:8px;word-break:break-all}
+.res{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden}
+.ritem{background:var(--card);padding:9px 11px;display:flex;gap:10px;align-items:baseline}
+.ritem .rw{font-family:var(--f-disp);font-size:17px;font-weight:700}
+.ritem .rr{font-size:12px;color:var(--ai);letter-spacing:.04em}
+.ritem .rm{flex:1;min-width:0;font-size:13px;color:var(--ink-2);text-align:right}
+.empty{text-align:center;color:var(--ink-3);font-size:13px;padding:18px 10px}
+
+/* 底部導覽 */
+.tabs{flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);
+  padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.tabs-in{display:grid;grid-template-columns:repeat(4,1fr);max-width:720px;margin:0 auto}
+.tab{position:relative;background:none;border:0;padding:7px 2px 9px;display:flex;flex-direction:column;
+  align-items:center;gap:2px;min-height:54px;color:var(--ink-3);font-size:10.5px;letter-spacing:.08em}
+.tab i{font-style:normal;font-family:var(--f-disp);font-size:17px;line-height:1.2}
+.tab.on{color:var(--ai)}
+.tab.on i{font-weight:700}
+.tab .dot{position:absolute;top:8px;left:calc(50% + 11px);width:7px;height:7px;border-radius:50%;
+  background:var(--shu);border:1px solid var(--card)}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div style="min-width:0">
+      <div class="top-day ja" id="dayLabel">Day 1</div>
+      <div class="top-sub" id="weekLabel">第 1 週・語彙</div>
+    </div>
+    <div class="top-sp"></div>
+    <div class="streak">連續 <b class="tnum" id="streakN">0</b> 日</div>
+    <span class="pill" id="syncPill" title="資料儲存位置">本機</span>
+  </div>
+</header>
+
+<main>
+  <!-- ░ 今日 ░ -->
+  <section class="view wrap" id="v-today">
+    <div class="card">
+      <div class="sect-h"><h2 class="ja">今日のメニュー</h2><span class="note" id="menuNote">40 分</span></div>
+      <div class="bar" style="margin:8px 0 12px"><i id="dayBar" style="width:0%"></i></div>
+      <div class="blocks" id="blockList"></div>
+    </div>
+    <button class="btn" id="startBtn">セッションを始める</button>
+    <div class="kpis">
+      <div class="kpi"><b class="tnum" id="kDay">1</b><span>進度（/84 日）</span></div>
+      <div class="kpi"><b class="tnum" id="kDue">0</b><span>今日待複習</span></div>
+      <div class="kpi"><b class="tnum" id="kLeft">—</b><span>距考試（日）</span></div>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>學習量</h2><span class="note">累計</span></div>
+      <div class="meta" style="margin-top:8px">
+        <div><dt>語彙</dt><dd class="tnum" id="sVocab">0 / 576</dd></div>
+        <div><dt>文法</dt><dd class="tnum" id="sGram">0 / 100</dd></div>
+        <div><dt>漢字</dt><dd class="tnum" id="sKanji">0 / 160</dd></div>
+        <div><dt>正答率</dt><dd class="tnum" id="sAcc">—</dd></div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--ink-3)">每天 40 分鐘＝4 個 10 分鐘區塊。中斷了直接關掉，進度會留在原處；隔天從沒做完的區塊接續。</p>
+  </section>
+
+  <!-- ░ 進行中 ░ -->
+  <section class="view wrap" id="v-run" hidden></section>
+
+  <!-- ░ 複習 ░ -->
+  <section class="view wrap" id="v-review" hidden>
+    <div class="card">
+      <div class="sect-h"><h2 class="ja">復習（SRS）</h2><span class="note">間隔 1-2-4-8-16-32-64 日</span></div>
+      <div class="kpis" style="margin-top:10px">
+        <div class="kpi"><b class="tnum" id="rDue">0</b><span>到期</span></div>
+        <div class="kpi"><b class="tnum" id="rTotal">0</b><span>卡片總數</span></div>
+        <div class="kpi"><b class="tnum" id="rWeak">0</b><span>弱點（第1階）</span></div>
+      </div>
+    </div>
+    <button class="btn" id="reviewBtn">開始複習</button>
+    <button class="btn quiet" id="aheadBtn">提前複習 20 張（不改變到期日）</button>
+    <div class="card">
+      <div class="sect-h"><h2>弱點清單</h2><span class="note">錯過 2 次以上</span></div>
+      <div id="weakList" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <!-- ░ 課程 ░ -->
+  <section class="view wrap" id="v-course" hidden>
+    <div class="card">
+      <div class="sect-h"><h2>字庫搜尋</h2><span class="note">單字／文法／漢字</span></div>
+      <div style="margin-top:8px"><input type="search" id="q" placeholder="輸入漢字、假名或中文" autocomplete="off"></div>
+      <div id="qres" style="margin-top:10px"></div>
+    </div>
+    <div class="sect-h"><h2 class="ja">12 週カリキュラム</h2><span class="note">84 日</span></div>
+    <div id="courseList" style="display:flex;flex-direction:column;gap:8px"></div>
+  </section>
+
+  <!-- ░ 設定 ░ -->
+  <section class="view wrap" id="v-set" hidden>
+    <div class="card">
+      <div class="sect-h"><h2>考試日</h2><span class="note">用於倒數</span></div>
+      <div style="margin-top:8px"><input type="date" id="examDate"></div>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:8px">JLPT 一年兩次（7 月／12 月），報名約在考前 3 個月。請依官方公告填入實際日期。</p>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>朗讀（聴解）</h2><span class="note" id="voiceNote">檢查中…</span></div>
+      <div class="chips" style="margin-top:10px">
+        <button class="chip" data-rate="0.7">0.7 倍</button>
+        <button class="chip" data-rate="0.85">0.85 倍</button>
+        <button class="chip" data-rate="1">1.0 倍</button>
+        <button class="chip" data-rate="1.15">1.15 倍</button>
+      </div>
+      <button class="btn ghost" id="testVoice" style="margin-top:10px">試聽：日本語の勉強を続けます</button>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:8px">使用裝置內建的日文語音合成。沒有日文語音時聴解區塊會改為「讀稿模式」。通勤時建議戴耳機。</p>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>外觀</h2></div>
+      <div class="chips" style="margin-top:10px">
+        <button class="chip" data-theme="auto">跟隨系統</button>
+        <button class="chip" data-theme="light">淺色</button>
+        <button class="chip" data-theme="dark">深色</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>備份</h2><span class="note">換裝置、清瀏覽器資料前使用</span></div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn quiet" id="bkOut">產生備份碼</button>
+        <button class="btn quiet" id="bkIn">從備份碼還原</button>
+      </div>
+      <textarea id="bkBox" rows="5" hidden placeholder="把備份碼貼進這裡"></textarea>
+      <div id="bkMsg" style="font-size:12px;color:var(--ink-3);margin-top:6px"></div>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>進度</h2><span class="note" id="saveState">—</span></div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn quiet" id="backDay">回上一天</button>
+        <button class="btn quiet" id="skipDay">跳過今天</button>
+      </div>
+      <button class="btn quiet" id="resetAll" style="margin-top:8px;color:var(--shu);border-color:var(--shu)">清除全部進度</button>
+      <div id="resetConfirm" hidden style="margin-top:8px">
+        <div class="hint"><b>確認：</b>所有進度與複習記錄都會刪除，無法復原。</div>
+        <div class="btn-row" style="margin-top:8px">
+          <button class="btn quiet" id="resetNo">取消</button>
+          <button class="btn" id="resetYes" style="background:var(--shu);border-color:var(--shu)">確定刪除</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs">
+  <div class="tabs-in">
+    <button class="tab on" data-view="today"><i>今</i>今日</button>
+    <button class="tab" data-view="review"><i>復</i>複習<span class="dot" id="dueDot" hidden></span></button>
+    <button class="tab" data-view="course"><i>課</i>課程</button>
+    <button class="tab" data-view="set"><i>設</i>設定</button>
+  </div>
+</nav>
+
+<script src="data/grammar.js"></script>
+<script src="data/vocab_a.js"></script>
+<script src="data/vocab_b.js"></script>
+<script src="data/kanji.js"></script>
+<script src="data/reading.js"></script>
+<script src="data/listening.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

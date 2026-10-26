@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="平假名與片假名共 104 音：可點選的五十音表、16 課漸進課程、七種題型練習與熟練度熱圖">
+<meta name="theme-color" content="#2b5159">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;font-size:14px}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>五十音 稽古帖</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+/* 版面：五十音表為主畫面，點格子展開字卡；底部四分頁。平假名＝藍鉄，片假名＝弁柄，顏色本身帶資訊 */
+:root{
+  --paper:#f2f1ed; --card:#fffefb; --card-2:#eae8e2;
+  --ink:#232020; --ink-2:#5c5753; --ink-3:#938d86;
+  --line:#ddd9d1; --line-2:#c6c0b6;
+  --ai:#2b5159; --ai-soft:#e3ecec; --ai-line:#a8c4c6;      /* 平假名 藍鉄 */
+  --be:#9d4a38; --be-soft:#f6e6e1; --be-line:#dcb3a6;      /* 片假名 弁柄 */
+  --ok:#4a6b3a; --ok-soft:#e7eee0;
+  --mid:#9a7318; --mid-soft:#f6eeda;
+  --f-kana:"Klee One","Yu Kyokasho","Hiragino Mincho ProN",serif;
+  --f-ui:"Zen Maru Gothic","PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  --r:12px; --tap:46px;
+  --gut-l:max(16px,env(safe-area-inset-left,0px));
+  --gut-r:max(16px,env(safe-area-inset-right,0px));
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#15140f; --card:#1e1c17; --card-2:#272420;
+  --ink:#eeeae2; --ink-2:#aaa49a; --ink-3:#7b756c;
+  --line:#322e28; --line-2:#443f38;
+  --ai:#8fc0c6; --ai-soft:#1b2b2d; --ai-line:#35565a;
+  --be:#e2957f; --be-soft:#2e1f1a; --be-line:#5c3a2e;
+  --ok:#9dc17f; --ok-soft:#1e2718;
+  --mid:#dcb45c; --mid-soft:#2b2415;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#15140f; --card:#1e1c17; --card-2:#272420;
+  --ink:#eeeae2; --ink-2:#aaa49a; --ink-3:#7b756c;
+  --line:#322e28; --line-2:#443f38;
+  --ai:#8fc0c6; --ai-soft:#1b2b2d; --ai-line:#35565a;
+  --be:#e2957f; --be-soft:#2e1f1a; --be-line:#5c3a2e;
+  --ok:#9dc17f; --ok-soft:#1e2718;
+  --mid:#dcb45c; --mid-soft:#2b2415;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;
+  line-height:1.7;display:flex;flex-direction:column;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
+p{margin:0}
+.kana{font-family:var(--f-kana)}
+.tnum{font-variant-numeric:tabular-nums}
+
+.top{flex:0 0 auto;background:var(--card);border-bottom:1px solid var(--line)}
+.top-in{padding-left:var(--gut-l);padding-right:var(--gut-r);padding-block:8px;display:flex;
+  align-items:center;gap:10px;min-height:46px;max-width:760px;margin:0 auto}
+.top-t{font-family:var(--f-kana);font-size:17px;font-weight:600;letter-spacing:.04em}
+.top-sub{font-size:11px;color:var(--ink-3)}
+.sp{flex:1;min-width:0}
+.pill{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2);white-space:nowrap}
+.pill.on{border-color:var(--ai-line);background:var(--ai-soft);color:var(--ai)}
+.pill.warn{border-color:var(--mid);background:var(--mid-soft);color:var(--mid)}
+
+main{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.wrap{padding-left:var(--gut-l);padding-right:var(--gut-r);padding-block:14px 26px;
+  display:flex;flex-direction:column;gap:14px;max-width:760px;margin:0 auto}
+.view[hidden]{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.sect-h{display:flex;align-items:baseline;gap:8px}
+.sect-h h2{font-size:14px;letter-spacing:.06em}
+.sect-h .note{font-size:11px;color:var(--ink-3)}
+.eyebrow{font-size:10px;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase}
+.rule{height:1px;background:var(--line);margin:12px 0}
+
+/* 分段切換 */
+.seg{display:flex;gap:0;border:1px solid var(--line-2);border-radius:999px;overflow:hidden;background:var(--card)}
+.seg button{flex:1;min-height:38px;border:0;background:none;font-size:13px;color:var(--ink-2);padding:0 4px}
+.seg button.on{background:var(--ai);color:#fff;font-weight:700}
+.seg.be button.on{background:var(--be)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:36px;padding:5px 11px;border-radius:999px;border:1px solid var(--line-2);
+  background:var(--card);color:var(--ink-2);font-size:13px}
+.chip.on{border-color:var(--ai);background:var(--ai-soft);color:var(--ai);font-weight:700}
+
+/* 五十音表 */
+.grid{display:grid;grid-template-columns:22px repeat(5,1fr);gap:4px}
+.grid.y3{grid-template-columns:34px repeat(3,1fr)}
+.ghead{font-size:10px;color:var(--ink-3);text-align:center;align-self:center;letter-spacing:.04em}
+.cell{aspect-ratio:1/1;min-width:0;border:1px solid var(--line);border-radius:8px;background:var(--card);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:2px}
+.cell.void{border:0;background:none}
+.cell .g{font-family:var(--f-kana);font-size:clamp(17px,5.4vw,26px);line-height:1.15;font-weight:600}
+.cell .rr{font-size:9.5px;color:var(--ink-3);letter-spacing:.02em}
+.cell.kata .g{color:var(--be)}
+.cell.sel{border-color:var(--ai);box-shadow:0 0 0 2px var(--ai-soft)}
+.cell.lv1{background:var(--be-soft);border-color:var(--be-line)}
+.cell.lv2{background:var(--mid-soft);border-color:var(--mid)}
+.cell.lv3{background:var(--ok-soft);border-color:var(--ok)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--ink-3);margin-top:10px}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:11px;height:11px;border-radius:3px;border:1px solid var(--line-2);display:block}
+
+/* 字卡 */
+.bigpair{display:flex;gap:10px;align-items:stretch}
+.bigcell{flex:1;min-width:0;border:1px solid var(--line);border-radius:var(--r);background:var(--card-2);
+  padding:10px 6px;text-align:center}
+.bigcell.h{border-color:var(--ai-line);background:var(--ai-soft)}
+.bigcell.k{border-color:var(--be-line);background:var(--be-soft)}
+.bigcell .lab{font-size:10px;letter-spacing:.14em;color:var(--ink-3)}
+.bigcell .g{font-family:var(--f-kana);font-size:clamp(50px,16vw,76px);line-height:1.1;font-weight:600}
+.bigcell.h .g{color:var(--ai)}
+.bigcell.k .g{color:var(--be)}
+.bigcell .sm{font-size:11px;color:var(--ink-2)}
+.romaji{font-family:var(--f-ui);font-size:28px;font-weight:700;letter-spacing:.08em;text-align:center}
+.meta{display:flex;flex-direction:column;gap:7px;font-size:13.5px}
+.meta div{display:flex;gap:8px}
+.meta dt{flex:0 0 52px;color:var(--ink-3);font-size:11.5px;padding-top:3px;letter-spacing:.06em}
+.meta dd{margin:0;flex:1;min-width:0}
+.src{font-family:var(--f-kana);font-size:19px;font-weight:600}
+.hint{background:var(--mid-soft);border:1px solid var(--mid);border-radius:8px;padding:9px 11px;font-size:13px}
+.spk{flex:0 0 auto;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);
+  background:var(--card);color:var(--ai);display:grid;place-items:center;font-size:15px}
+
+/* 按鈕 */
+.btn{display:block;width:100%;min-height:var(--tap);border-radius:var(--r);border:1px solid var(--ai);
+  background:var(--ai);color:#fff;font-size:16px;font-weight:700;letter-spacing:.04em;padding:10px}
+.btn.be{background:var(--be);border-color:var(--be)}
+.btn.ghost{background:var(--card);color:var(--ai)}
+.btn.quiet{background:var(--card);color:var(--ink-2);border-color:var(--line-2);font-weight:500;font-size:14px}
+.btn:disabled{opacity:.5}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* 課程清單 */
+.lessons{display:flex;flex-direction:column;gap:8px}
+.les{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;min-height:var(--tap)}
+.les .no{flex:0 0 30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:12px;
+  font-weight:700;background:var(--card-2);border:1px solid var(--line);color:var(--ink-2)}
+.les.done .no{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.les .lt{flex:1;min-width:0}
+.les .lt b{display:block;font-family:var(--f-kana);font-size:15.5px;font-weight:600}
+.les .lt small{color:var(--ink-3);font-size:11.5px}
+.les .pct{font-size:11px;color:var(--ink-3);white-space:nowrap}
+
+/* 測驗 */
+.studyhead{display:flex;align-items:center;gap:10px}
+.studyhead .t{flex:1;min-width:0;font-size:13px;color:var(--ink-2)}
+.dots{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line-2);display:block}
+.dots i.on{background:var(--ai)}.dots i.ok{background:var(--ok)}.dots i.ng{background:var(--be)}
+.qbig{font-family:var(--f-kana);font-size:clamp(66px,24vw,110px);line-height:1.05;font-weight:600;text-align:center}
+.qbig.k{color:var(--be)}
+.qmid{font-size:clamp(28px,9vw,40px);font-weight:700;text-align:center;letter-spacing:.06em}
+.qlabel{font-size:13px;color:var(--ink-2);text-align:center}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts.one{grid-template-columns:1fr}
+.opt{min-height:56px;background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);
+  padding:8px;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center}
+.opt .tx{font-size:20px;font-weight:700;letter-spacing:.04em;min-width:0;word-break:break-word}
+.opt .tx.kana{font-family:var(--f-kana);font-size:30px;font-weight:600}
+.opt .r{font-size:11px;color:var(--ink-3);letter-spacing:.03em}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ng{border-color:var(--be);background:var(--be-soft)}
+.opt:disabled{cursor:default}
+.fb{border-radius:var(--r);padding:11px 12px;font-size:13.5px;display:flex;gap:10px;align-items:flex-start}
+.fb.ok{background:var(--ok-soft);border:1px solid var(--ok)}
+.fb.ng{background:var(--be-soft);border:1px solid var(--be)}
+.fb .m{font-family:var(--f-kana);font-size:19px;line-height:1}
+.fb .tx{flex:1;min-width:0}
+.fb .tx b{display:block;font-size:13px;margin-bottom:2px}
+
+/* 單字 */
+.wordrow{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r);padding:9px 11px}
+.wordrow .w{font-family:var(--f-kana);font-size:20px;font-weight:600;min-width:0}
+.wordrow .r{font-size:11.5px;color:var(--ink-3);letter-spacing:.03em}
+.wordrow .m{flex:1;min-width:0;font-size:13px;color:var(--ink-2);text-align:right}
+.cgroup{display:flex;gap:8px;align-items:center;background:var(--card-2);border:1px solid var(--line);
+  border-radius:var(--r);padding:10px}
+.cgroup .gg{font-family:var(--f-kana);font-size:30px;font-weight:600;letter-spacing:.12em;flex:0 0 auto}
+.cgroup .tp{flex:1;min-width:0;font-size:12.5px;color:var(--ink-2)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.kpi{background:var(--card);padding:10px 8px;text-align:center;min-width:0}
+.kpi b{display:block;font-size:20px;line-height:1.2;font-variant-numeric:tabular-nums}
+.kpi span{font-size:10.5px;color:var(--ink-3)}
+.empty{text-align:center;color:var(--ink-3);font-size:13px;padding:16px 10px}
+textarea{width:100%;padding:9px 11px;border:1px solid var(--line-2);border-radius:var(--r);
+  background:var(--card);color:var(--ink);font:inherit;font-size:12px;line-height:1.5;
+  resize:vertical;margin-top:8px;word-break:break-all}
+
+.tabs{flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);
+  padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.tabs-in{display:grid;grid-template-columns:repeat(4,1fr);max-width:760px;margin:0 auto}
+.tab{position:relative;background:none;border:0;padding:7px 2px 9px;display:flex;flex-direction:column;
+  align-items:center;gap:2px;min-height:54px;color:var(--ink-3);font-size:10.5px;letter-spacing:.06em}
+.tab i{font-style:normal;font-family:var(--f-kana);font-size:18px;line-height:1.2;font-weight:600}
+.tab.on{color:var(--ai)}
+:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div style="min-width:0">
+      <div class="top-t kana" id="topT">五十音</div>
+      <div class="top-sub" id="topSub">平假名・片假名 各 46 音</div>
+    </div>
+    <div class="sp"></div>
+    <span class="pill" id="masterPill">熟練 0%</span>
+    <span class="pill" id="syncPill">本機</span>
+  </div>
+</header>
+
+<main>
+  <!-- ░ 五十音表 ░ -->
+  <section class="view wrap" id="v-table">
+    <div class="seg" id="segScript">
+      <button data-s="h" class="on">平假名</button>
+      <button data-s="k">片假名</button>
+      <button data-s="b">兩者對照</button>
+    </div>
+    <div class="chips" id="segSet">
+      <button class="chip on" data-set="sei">清音 46</button>
+      <button class="chip" data-set="daku">濁音・半濁音 25</button>
+      <button class="chip" data-set="yo">拗音 33</button>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2 id="gridTitle">清音</h2><span class="note">點格子看字卡</span></div>
+      <div id="gridHost" style="margin-top:10px"></div>
+      <div class="legend">
+        <span><i style="background:var(--card)"></i>未練習</span>
+        <span><i style="background:var(--be-soft);border-color:var(--be-line)"></i>不熟</span>
+        <span><i style="background:var(--mid-soft);border-color:var(--mid)"></i>普通</span>
+        <span><i style="background:var(--ok-soft);border-color:var(--ok)"></i>已熟</span>
+      </div>
+    </div>
+    <div id="detail"></div>
+    <button class="btn" id="quickDrill">隨機測 20 題</button>
+  </section>
+
+  <!-- ░ 課程 ░ -->
+  <section class="view wrap" id="v-lesson" hidden>
+    <div class="card">
+      <div class="sect-h"><h2 class="kana">16 課・約兩週</h2><span class="note" id="lesNote">每課 8〜12 分</span></div>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:6px">每課：字卡 → 片假名對照 → 混合測驗 → 單字應用。通勤 40 分鐘約可完成 3 課，或 1 課＋複習。</p>
+    </div>
+    <div class="lessons" id="lessonList"></div>
+  </section>
+
+  <!-- ░ 練習 ░ -->
+  <section class="view wrap" id="v-drill" hidden>
+    <div class="card">
+      <div class="sect-h"><h2>題型</h2></div>
+      <div class="chips" style="margin-top:10px" id="drillMode">
+        <button class="chip on" data-m="h2r">看平假名 → 選音</button>
+        <button class="chip" data-m="k2r">看片假名 → 選音</button>
+        <button class="chip" data-m="r2h">看羅馬字 → 選平假名</button>
+        <button class="chip" data-m="r2k">看羅馬字 → 選片假名</button>
+        <button class="chip" data-m="h2k">平假名 → 選片假名</button>
+        <button class="chip" data-m="k2h">片假名 → 選平假名</button>
+        <button class="chip" data-m="ear">聽音 → 選假名</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>範圍</h2></div>
+      <div class="chips" style="margin-top:10px" id="drillSet">
+        <button class="chip on" data-r="sei">清音</button>
+        <button class="chip" data-r="daku">濁音・半濁音</button>
+        <button class="chip" data-r="yo">拗音</button>
+        <button class="chip" data-r="all">全部 104 音</button>
+        <button class="chip" data-r="weak">我的弱點</button>
+      </div>
+      <div class="rule"></div>
+      <div class="chips" id="drillN">
+        <button class="chip on" data-n="10">10 題</button>
+        <button class="chip" data-n="20">20 題</button>
+        <button class="chip" data-n="40">40 題</button>
+      </div>
+    </div>
+    <button class="btn" id="startDrill">開始</button>
+    <div class="card">
+      <div class="sect-h"><h2>特殊規則</h2><span class="note">長音・促音・助詞例外</span></div>
+      <div id="ruleList" style="margin-top:10px;display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </section>
+
+  <!-- ░ 進行中 ░ -->
+  <section class="view wrap" id="v-run" hidden></section>
+
+  <!-- ░ 進度 ░ -->
+  <section class="view wrap" id="v-prog" hidden>
+    <div class="kpis">
+      <div class="kpi"><b class="tnum" id="pMaster">0</b><span>已熟（/104）</span></div>
+      <div class="kpi"><b class="tnum" id="pDue">0</b><span>今日待複習</span></div>
+      <div class="kpi"><b class="tnum" id="pAcc">—</b><span>正答率</span></div>
+    </div>
+    <button class="btn" id="reviewBtn">複習到期卡片</button>
+    <div class="card">
+      <div class="sect-h"><h2>最常錯的假名</h2><span class="note">依錯誤次數</span></div>
+      <div id="weakList" style="margin-top:8px"></div>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>朗讀</h2><span class="note" id="voiceNote">檢查中…</span></div>
+      <div class="chips" style="margin-top:10px" id="rateChips">
+        <button class="chip" data-rate="0.6">0.6 倍</button>
+        <button class="chip" data-rate="0.8">0.8 倍</button>
+        <button class="chip" data-rate="1">1.0 倍</button>
+      </div>
+      <button class="btn ghost" id="testVoice" style="margin-top:10px">試聽：あいうえお</button>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>外觀</h2></div>
+      <div class="chips" style="margin-top:10px" id="themeChips">
+        <button class="chip" data-theme="auto">跟隨系統</button>
+        <button class="chip" data-theme="light">淺色</button>
+        <button class="chip" data-theme="dark">深色</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>備份</h2><span class="note">換裝置、清瀏覽器資料前使用</span></div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn quiet" id="bkOut">產生備份碼</button>
+        <button class="btn quiet" id="bkIn">從備份碼還原</button>
+      </div>
+      <textarea id="bkBox" rows="5" hidden placeholder="把備份碼貼進這裡"></textarea>
+      <div id="bkMsg" style="font-size:12px;color:var(--ink-3);margin-top:6px"></div>
+    </div>
+    <div class="card">
+      <div class="sect-h"><h2>重設</h2><span class="note" id="saveState">—</span></div>
+      <button class="btn quiet" id="resetAll" style="margin-top:10px;color:var(--be);border-color:var(--be)">清除全部練習記錄</button>
+      <div id="resetConfirm" hidden style="margin-top:8px">
+        <div class="hint">所有熟練度與課程完成記錄都會刪除，無法復原。</div>
+        <div class="btn-row" style="margin-top:8px">
+          <button class="btn quiet" id="resetNo">取消</button>
+          <button class="btn be" id="resetYes">確定刪除</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs">
+  <div class="tabs-in">
+    <button class="tab on" data-view="table"><i>表</i>五十音表</button>
+    <button class="tab" data-view="lesson"><i>課</i>課程</button>
+    <button class="tab" data-view="drill"><i>練</i>練習</button>
+    <button class="tab" data-view="prog"><i>進</i>進度</button>
+  </div>
+</nav>
+
+<script src="data/kana.js"></script>
+<script src="data/lessons.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
